@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zon Cabaran Interaktif | Kesihatan Mental & Stres</title>
+<style>
+:root{
+  --ink:#20352f;--muted:#64766f;--cream:#fbfaf4;--green:#2f765c;
+  --green2:#dff2e6;--blue:#e4efff;--peach:#fff0df;--lilac:#f0e8ff;
+  --line:#e3e9e2;--white:#fff;--gold:#f4c95d;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);
+background:radial-gradient(ellipse at top left,#d9eee2 0,transparent 36%),radial-gradient(ellipse at top right,#e3edff 0,transparent 35%),var(--cream);line-height:1.55}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1050px;margin:auto;padding:22px 16px 42px}
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:30px 24px;color:#fff;background:linear-gradient(125deg,#245e4b,#397f68 58%,#759f8d);box-shadow:0 16px 38px #2d604c24}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:#ffffff13}
+.hero:before{width:250px;height:250px;right:-65px;top:-110px}.hero:after{width:170px;height:170px;right:115px;bottom:-125px}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.15em;font-weight:800;opacity:.85}
+h1{font-size:clamp(1.8rem,5vw,3rem);line-height:1.08;margin:10px 0}
+.hero p{max-width:650px;margin:10px 0 0;color:#eef8f1}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative;z-index:1;flex-wrap:wrap}
+.hero-icon{font-size:4rem;filter:drop-shadow(0 8px 12px #123b2c55);animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
+@keyframes pop{0%{transform:scale(.96);opacity:.3}100%{transform:scale(1);opacity:1}}
+@keyframes sparkle{0%,100%{transform:scale(.8) rotate(0);opacity:.45}50%{transform:scale(1.2) rotate(15deg);opacity:1}}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.stat{background:#ffffffdc;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:0 5px 18px #213c2c08}
+.stat small{color:var(--muted);display:block;font-weight:700}.stat strong{font-size:1.45rem}
+.progress-shell{height:10px;background:#e5ebe5;border-radius:999px;overflow:hidden;margin-top:7px}
+.progress{height:100%;width:0;background:linear-gradient(90deg,#5ca77d,#f4c95d);border-radius:999px;transition:width .45s ease}
+.section-title{display:flex;align-items:center;gap:10px;margin:28px 0 12px}
+.section-title h2{margin:0;font-size:1.25rem}
+.levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.level{border:1px solid var(--line);border-radius:17px;padding:13px 12px;background:#fff;display:flex;gap:10px;align-items:center;min-height:82px;transition:transform .2s,border .2s}
+.level .emoji{font-size:1.5rem}.level b{display:block;font-size:.9rem}.level small{color:var(--muted);font-size:.76rem}
+.level.active{border:2px solid var(--green);background:#f0faf3;transform:translateY(-2px)}
+.level.done{background:#fff9e4;border-color:#f0d77c}
+.panel{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(18px,4vw,28px);box-shadow:0 12px 35px #233d2d0a;animation:pop .35s ease}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--green2);color:#245a43;padding:5px 10px;border-radius:999px;font-size:.77rem;font-weight:800}
+h3{margin:12px 0 8px;font-size:1.45rem}
+.prompt{color:#4b6258;font-size:1.02rem;margin:0 0 18px}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choice{padding:14px 15px;border-radius:15px;border:1.5px solid #dfe7df;background:#fbfcf8;color:var(--ink);text-align:left;min-height:60px;transition:transform .15s,border .15s,background .15s}
+.choice:hover{transform:translateY(-2px);border-color:#7bb895;background:#f0faf3}
+.choice:focus-visible,.btn:focus-visible{outline:3px solid #8ab9ff;outline-offset:3px}
+.choice.correct{border-color:#409568;background:#e7f8ec}.choice.wrong{border-color:#dc8a78;background:#fff0ec}
+.feedback{margin-top:15px;padding:14px 16px;border-radius:14px;display:none}
+.feedback.show{display:block;animation:pop .25s ease}.feedback.good{background:#e9f8ed;border:1px solid #c5e8ce}.feedback.try{background:#fff2e9;border:1px solid #f3d2bd}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{border:0;border-radius:13px;padding:12px 18px;font-weight:800;transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(.98)}
+.btn.primary{background:var(--green);color:white}.btn.secondary{background:#eef2ed;color:#355247}.btn.gold{background:#f8d875;color:#4c3b10}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.hint{font-size:.84rem;color:var(--muted);margin-top:12px}
+.result{text-align:center;padding:22px 12px}.result .cup{font-size:4rem;animation:sparkle 2s infinite}.result h3{font-size:1.8rem}
+.footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:20px}
+.confetti{display:none;font-size:1.5rem;letter-spacing:.5rem;animation:sparkle 1s infinite}
+@media(max-width:720px){.levels{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:11px}.stat strong{font-size:1.2rem}}
+@media(max-width:440px){.choices{grid-template-columns:1fr}.hero{padding:25px 19px}.hero-icon{font-size:3rem}.level{padding:10px}.stat small{font-size:.7rem}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-row">
+      <div>
+        <div class="kicker">🌿 Belajar sambil bermain</div>
+        <h1>Zon Cabaran<br>Interaktif</h1>
+        <p>Kenali emosi, hadapi cabaran stres dan bina hubungan yang sihat melalui empat misi ringkas. Setiap jawapan ialah peluang untuk belajar.</p>
+      </div>
+      <div class="hero-icon" aria-hidden="true">🧠✨</div>
+    </div>
+  </header>
+
+  <section class="stats" aria-label="Kemajuan permainan">
+    <div class="stat"><small>⭐ Jumlah mata</small><strong id="score">0 / 400</strong></div>
+    <div class="stat"><small>🏁 Tahap selesai</small><strong id="completed">0 / 4</strong></div>
+    <div class="stat"><small>📈 Kemajuan</small><strong id="percent">0%</strong><div class="progress-shell"><div class="progress" id="progress"></div></div></div>
+  </section>
+
+  <div class="section-title"><span>🗺️</span><h2>Pilih misi kamu</h2></div>
+  <nav class="levels" aria-label="Tahap aktiviti">
+    <button class="level active" data-level="0"><span class="emoji">💚</span><span><b>1. Kenali Emosi</b><small id="status0">Belum selesai</small></span></button>
+    <button class="level" data-level="1"><span class="emoji">🧩</span><span><b>2. Cabaran Stres</b><small id="status1">Belum selesai</small></span></button>
+    <button class="level" data-level="2"><span class="emoji">🤝</span><span><b>3. Misi PEERS</b><small id="status2">Belum selesai</small></span></button>
+    <button class="level" data-level="3"><span class="emoji">🏆</span><span><b>4. Cabaran Akhir</b><small id="status3">Belum selesai</small></span></button>
+  </nav>
+
+  <main class="panel" id="game" aria-live="polite"></main>
+  <div class="footer">🌱 Ingat: aktiviti ini untuk pembelajaran kendiri, bukan diagnosis kesihatan mental. Jika kamu berasa terbeban, berbincanglah dengan orang dewasa yang dipercayai atau kaunselor.</div>
+</div>
+<script>
+const stages = [
+ {title:"Kenali Emosi Saya",tag:"TAHAP 1 · KESEDARAN EMOSI",intro:"Apabila tugasan bertambah dan masa semakin suntuk, apakah perasaan yang mungkin kamu alami?",q:"Pilih satu emosi yang paling hampir dengan perasaan kamu ketika menghadapi situasi itu.",choices:[
+  {t:"😟 Risau atau tertekan",ok:true,fb:"Bagus kerana kamu dapat mengenal pasti rasa risau. Mengenali emosi ialah langkah awal untuk memahami keperluan diri."},
+  {t:"😄 Gembira sepanjang masa",ok:false,fb:"Setiap orang memberi tindak balas berbeza. Dalam situasi yang mencabar, sesetengah orang mungkin berasa risau atau terbeban."},
+  {t:"🤷 Saya tidak perlu ambil tahu",ok:false,fb:"Menyedari emosi boleh membantu kita memahami diri. Cuba namakan perasaan tanpa menyalahkan diri."},
+  {t:"😠 Marah kepada semua orang",ok:false,fb:"Marah boleh berlaku, tetapi bukan satu-satunya reaksi. Cuba kenal pasti emosi sebenar dan perkara yang mencetuskannya."}
+ ]},
+ {title:"Cabaran Pengurusan Stres",tag:"TAHAP 2 · STRATEGI BELAJAR",intro:"Kamu mempunyai tiga tugasan yang perlu dihantar dalam minggu yang sama. Kamu mula berasa tertekan.",q:"Apakah tindakan yang paling membantu untuk memulakan langkah?",choices:[
+  {t:"📅 Susun keutamaan dan jadual yang realistik",ok:true,fb:"Tepat! Pecahkan tugasan kepada langkah kecil, utamakan tarikh akhir dan selitkan rehat yang mencukupi."},
+  {t:"⏳ Tangguhkan semuanya sehingga saat akhir",ok:false,fb:"Menangguhkan tugasan boleh menambahkan tekanan. Cuba mulakan dengan satu langkah kecil yang mampu dibuat sekarang."},
+  {t:"🤐 Simpan semuanya dan jangan minta bantuan",ok:false,fb:"Kamu tidak perlu mengurus semuanya seorang diri. Jika perlu, berbincanglah dengan pensyarah, rakan atau orang yang dipercayai."},
+  {t:"🌙 Berjaga sepanjang malam setiap hari",ok:false,fb:"Rehat dan tidur yang mencukupi penting untuk tumpuan. Rancang masa supaya kamu tidak bergantung pada berjaga malam."}
+ ]},
+ {title:"Misi PEERS: Batas Peribadi",tag:"TAHAP 3 · HUBUNGAN SIHAT",intro:"Seorang rakan mendesak kamu berkongsi maklumat peribadi yang kamu tidak selesa untuk berikan.",q:"Apakah respons yang paling sesuai?",choices:[
+  {t:"🛡️ Tolak dengan sopan dan jelaskan batas kamu",ok:true,fb:"Betul! Kamu berhak menjaga privasi. Rakan yang menghormati kamu sepatutnya menghormati batas peribadi kamu."},
+  {t:"📲 Kongsi kerana takut rakan berkecil hati",ok:false,fb:"Kamu tidak wajib berkongsi maklumat peribadi untuk menyenangkan orang lain. Keselesaan dan keselamatan kamu penting."},
+  {t:"📢 Sebarkan maklumat peribadi rakan itu pula",ok:false,fb:"Membalas dengan mendedahkan maklumat orang lain boleh menjejaskan kepercayaan. Tetapkan batas dengan jelas dan selamat."},
+  {t:"🙈 Abaikan rasa tidak selesa dan ikut sahaja",ok:false,fb:"Rasa tidak selesa wajar diberi perhatian. Kamu boleh berkata tidak dan mendapatkan bantuan jika tekanan berterusan."}
+ ]},
+ {title:"Cabaran Akhir",tag:"TAHAP 4 · UJI PENGETAHUAN",intro:"Masa untuk menggabungkan apa yang telah kamu pelajari!",q:"Antara berikut, yang manakah contoh tindakan sihat apabila tekanan mula meningkat?",choices:[
+  {t:"🌬️ Berhenti seketika, tarik nafas perlahan dan rancang langkah seterusnya",ok:true,fb:"Hebat! Jeda seketika boleh membantu kamu kembali memberi tumpuan. Pilih strategi yang sesuai untuk diri kamu."},
+  {t:"🚫 Menyalahkan diri kerana semua perkara",ok:false,fb:"Menyalahkan diri tidak semestinya menyelesaikan masalah. Cuba nilai keadaan dengan lebih seimbang dan fokus pada langkah yang boleh diambil."},
+  {t:"🔒 Menjauhkan diri daripada semua orang untuk selama-lamanya",ok:false,fb:"Masa bersendirian boleh membantu sesekali, tetapi sokongan daripada orang yang dipercayai juga penting."},
+  {t:"⚡ Membuat semua keputusan dengan tergesa-gesa",ok:false,fb:"Apabila tertekan, berhenti seketika dan fikirkan pilihan yang ada sebelum membuat keputusan."}
+ ]}
+];
+let current=0, score=0, completed=new Set(), answered={};
+const game=document.getElementById("game");
+function render(){
+ document.querySelectorAll(".level").forEach((b,i)=>{b.classList.toggle("active",i===current);b.classList.toggle("done",completed.has(i));document.getElementById("status"+i).textContent=completed.has(i)?"✓ Selesai · "+(answered[i]===true?"100":"0")+" mata":"Belum selesai";});
+ if(completed.size===4){renderResult();return;}
+ const s=stages[current], prev=answered[current];
+ game.innerHTML=`<div class="panel-head"><span class="pill">${s.tag}</span><span class="pill">⭐ 100 mata</span></div>
+ <h3>${s.title}</h3><p class="prompt">${s.intro}</p><p><strong>${s.q}</strong></p>
+ <div class="choices">${s.choices.map((c,i)=>`<button class="choice" data-choice="${i}" ${prev!==undefined?"disabled":""}>${c.t}</button>`).join("")}</div>
+ <div class="feedback" id="feedback" role="status"></div>
+ <div class="actions"><button class="btn secondary" id="resetStage">↻ Cuba semula tahap</button><button class="btn primary" id="next" ${prev===undefined?"disabled":""}>${current===3?"Lihat keputusan":"Misi seterusnya →"}</button></div>
+ <p class="hint">Pilih satu jawapan. Kamu boleh meneruskan misi selepas melihat maklum balas.</p>`;
+ game.querySelectorAll("[data-choice]").forEach(btn=>btn.addEventListener("click",()=>choose(Number(btn.dataset.choice))));
+ document.getElementById("resetStage").addEventListener("click",()=>{if(answered[current]!==undefined){score-=answered[current]?100:0;delete answered[current];completed.delete(current);updateStats();}render();});
+ document.getElementById("next").addEventListener("click",()=>{if(answered[current]===undefined)return;if(current===3){completed.add(3);updateStats();renderResult();}else{current++;render();}});
+ if(prev!==undefined)showFeedback(s.choices.find(c=>c.ok).fb,prev);
+ updateStats();
+}
+function choose(i){
+ if(answered[current]!==undefined)return;
+ const s=stages[current],c=s.choices[i];answered[current]=c.ok;completed.add(current);if(c.ok)score+=100;
+ game.querySelectorAll("[data-choice]").forEach((b,j)=>{b.disabled=true;if(s.choices[j].ok)b.classList.add("correct");else if(j===i)b.classList.add("wrong");});
+ showFeedback(c.fb,c.ok);
+ document.getElementById("next").disabled=false;
+ document.getElementById("next").textContent=current===3?"Lihat keputusan":"Misi seterusnya →";
+ updateStats();
+}
+function showFeedback(msg,good){
+ const el=document.getElementById("feedback");if(!el)return;
+ el.className="feedback show "+(good?"good":"try");el.innerHTML=(good?"<strong>✨ Jawapan tepat!</strong><br>":"<strong>🌱 Terus belajar!</strong><br>")+msg;
+}
+function updateStats(){
+ document.getElementById("score").textContent=score+" / 400";
+ document.getElementById("completed").textContent=completed.size+" / 4";
+ const p=Math.round(completed.size/4*100);document.getElementById("percent").textContent=p+"%";document.getElementById("progress").style.width=p+"%";
+ document.querySelectorAll(".level").forEach((b,i)=>{b.classList.toggle("done",completed.has(i));document.getElementById("status"+i).textContent=completed.has(i)?"✓ Selesai · "+(answered[i]===true?"100":"0")+" mata":"Belum selesai";});
+}
+function renderResult(){
+ const message=score===400?"Hebat! Semua jawapan kamu tepat.":score>=200?"Usaha yang baik! Teruskan belajar dan cuba lagi untuk meningkatkan skor.":"Terima kasih kerana mencuba. Semak maklum balas dan ulang permainan untuk berlatih lagi.";
+ game.innerHTML=`<div class="result"><div class="cup">🏆</div><div class="kicker" style="color:#54836a">MISI SELESAI</div><h3>Tahniah, kamu berjaya mencuba semua tahap!</h3><p class="prompt">${message}</p><div class="stat" style="max-width:300px;margin:18px auto"><small>⭐ Skor akhir kamu</small><strong>${score} / 400</strong></div><div class="confetti" style="display:block">✦ ✧ ✦ ✧ ✦</div><div class="actions" style="justify-content:center"><button class="btn primary" id="again">↻ Main semula</button></div><p class="hint">Skor ini hanya untuk sesi ini dan tidak disimpan apabila halaman ditutup.</p></div>`;
+ document.getElementById("again").addEventListener("click",()=>{current=0;score=0;completed=new Set();answered={};render();});
+ updateStats();
+}
+document.querySelectorAll(".level").forEach(b=>b.addEventListener("click",()=>{current=Number(b.dataset.level);render();}));
+render();
+</script>
+</body>
+</html>
